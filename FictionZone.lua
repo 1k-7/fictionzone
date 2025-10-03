@@ -16,7 +16,6 @@ local function getPassage(chapterURL)
     local document = GETDocument(expandURL(chapterURL))
     local content = document:selectFirst("#chapter-content")
 
-    -- Add newlines between paragraphs for proper formatting
     content = tostring(content):gsub('<p', '<p'):gsub('</p', '</p'):gsub('<br>', '</p><p>')
     content = Document(content):selectFirst('body')
 
@@ -27,13 +26,19 @@ end
 --- @param loadChapters boolean
 --- @return NovelInfo
 local function parseNovel(novelURL, loadChapters)
+    if novelURL == "how" then
+        return NovelInfo {
+            title = "How to use FictionZone",
+            description = "You can browse novels by going to the 'Browse' tab. To search, tap the search icon in the top right and enter your query."
+        }
+    end
+
     local document = GETDocument(expandURL(novelURL))
     local title = document:selectFirst("div.main-content h1.story-title"):text()
     local author = document:selectFirst("div.author-details h4.author-name a"):text()
     local cover = document:selectFirst("div.story-sidebar-left-img img"):attr("src")
     local summaryHtml = document:selectFirst("div.story-main-content div.summary")
     
-    -- Process summary to convert <br> to newlines
     summaryHtml:select("br"):prepend("\\n")
     local summary = summaryHtml:wholeText():gsub("\\n", "\n"):gsub('^%s*(.-)%s*$', '%1')
 
@@ -89,7 +94,6 @@ local function search(filters)
     local query = filters[QUERY]
 
     if query and query ~= "" then
-        -- Search functionality
         local searchUrl = baseURL .. "/search?keyword=" .. query .. "&page=" .. page
         local document = GETDocument(searchUrl)
         return map(document:select("div.story-item"), function(v)
@@ -101,7 +105,6 @@ local function search(filters)
             }
         end)
     else
-        -- Browse functionality using filters
         local sortValue = SortByOptions[tonumber(filters[2]) or 1].value
         local browseUrl = baseURL .. sortValue .. page
         local document = GETDocument(browseUrl)
@@ -141,8 +144,16 @@ return {
     chapterType = ChapterType.HTML,
 
     listings = {
+        Listing("Nothing", false, function(data)
+            return {
+                Novel {
+                    title = "How to use FictionZone",
+                    link = "how"
+                }
+            }
+        end),
         Listing("Browse", true, function(data)
-            return search(data) -- Reuse the search function for browsing
+            return search(data)
         end)
     },
 
