@@ -1,4 +1,4 @@
--- {"id":1400000001,"ver":"1.0.0","author":"Gemini"}
+-- {"id":1400000001,"ver":"1.0.0","libVer":"1.0.0","author":"Gemini"}
 
 local baseURL = "https://fictionzone.net"
 
@@ -134,13 +134,13 @@ local function searchFilters()
     }
 end
 
-
 return {
     id = 1400000001,
     name = "FictionZone",
     baseURL = baseURL,
+    imageURL = "",
+    hasCloudFlare = false,
     hasSearch = true,
-    isSearchIncrementing = true,
     chapterType = ChapterType.HTML,
 
     listings = {
@@ -161,7 +161,8 @@ return {
     parseNovel = parseNovel,
     search = search,
     searchFilters = searchFilters(),
-
+    updateSetting = function(id, value)
+    end,
     shrinkURL = shrinkURL,
     expandURL = expandURL
 }
