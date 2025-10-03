@@ -1,8 +1,8 @@
 -- {"id":1308640001,"ver":"1.0.0","libVer":"1.0.0","author":"Gemini"}
 
 local baseURL = "https://fictionzone.net"
+local settings = {} -- THIS IS THE CRITICAL ADDITION
 
--- (All the helper functions like shrinkURL, expandURL, getPassage, parseNovel, etc. remain the same as before)
 local function shrinkURL(url)
     return url:gsub("^.-fictionzone%.com", "")
 end
@@ -158,14 +158,16 @@ return {
         end)
     },
     
-    settings = {},
-    
     getPassage = getPassage,
     parseNovel = parseNovel,
     search = search,
     searchFilters = searchFilters(),
+    
+    -- THIS FUNCTION IS NOW CORRECT
     updateSetting = function(id, value)
+        settings[id] = value
     end,
+
     shrinkURL = shrinkURL,
     expandURL = expandURL
 }
