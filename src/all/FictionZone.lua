@@ -1,7 +1,7 @@
--- {"id":1308640001,"ver":"1.0.0","libVer":"1.0.0","author":"Gemini"}
+-- {"id":1308640001,"ver":"1.0.1","libVer":"1.0.0","author":"Gemini"}
 
 local baseURL = "https://fictionzone.net"
-local settings = {} -- THIS IS THE CRITICAL ADDITION
+local settings = {}
 
 local function shrinkURL(url)
     return url:gsub("^.-fictionzone%.com", "")
@@ -140,7 +140,7 @@ return {
     name = "FictionZone",
     baseURL = baseURL,
     imageURL = "",
-    hasCloudFlare = false,
+    hasCloudFlare = true, -- THIS IS THE FIX
     hasSearch = true,
     chapterType = ChapterType.HTML,
 
@@ -158,12 +158,13 @@ return {
         end)
     },
     
+    settings = {},
+    
     getPassage = getPassage,
     parseNovel = parseNovel,
     search = search,
     searchFilters = searchFilters(),
     
-    -- THIS FUNCTION IS NOW CORRECT
     updateSetting = function(id, value)
         settings[id] = value
     end,
