@@ -1,0 +1,12 @@
+{
+  "name": "FictionZone",
+  "id": "net.fictionzone",
+  "version": "1.0.0",
+  "author": "Gemini",
+  "entry": "FictionZone.mjs",
+  "locales": [
+    "en"
+  ],
+  "website": "https://fictionzone.net",
+  "icon": "icon.png"
+}
