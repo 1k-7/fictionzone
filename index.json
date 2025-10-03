@@ -4,9 +4,10 @@
       "name": "FictionZone",
       "fileName": "FictionZone",
       "id": 1400000001,
-      "lang": "en",
+      "lang": "all",
       "ver": "1.0.0",
       "libVer": "1.0.0",
+      "imageURL": "",
       "md5": ""
     }
   ]
