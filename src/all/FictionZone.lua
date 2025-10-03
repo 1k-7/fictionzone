@@ -1,7 +1,16 @@
--- {"id":1308640001,"ver":"1.0.1","libVer":"1.0.0","author":"Gemini"}
+-- {"id":1308640001,"ver":"1.0.2","libVer":"1.0.0","author":"Gemini"}
 
 local baseURL = "https://fictionzone.net"
 local settings = {}
+
+-- Helper function to make requests look like a real browser
+local function GETDocumentWithHeaders(url)
+    local headers = HeadersBuilder()
+        :add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36")
+        :build()
+    local request = GET(url, headers)
+    return RequestDocument(request)
+end
 
 local function shrinkURL(url)
     return url:gsub("^.-fictionzone%.com", "")
@@ -14,7 +23,7 @@ end
 --- @param chapterURL string
 --- @return string
 local function getPassage(chapterURL)
-    local document = GETDocument(expandURL(chapterURL))
+    local document = GETDocumentWithHeaders(expandURL(chapterURL))
     local content = document:selectFirst("#chapter-content")
 
     content = tostring(content):gsub('<p', '<p'):gsub('</p', '</p'):gsub('<br>', '</p><p>')
@@ -34,7 +43,7 @@ local function parseNovel(novelURL, loadChapters)
         }
     end
 
-    local document = GETDocument(expandURL(novelURL))
+    local document = GETDocumentWithHeaders(expandURL(novelURL))
     local title = document:selectFirst("div.main-content h1.story-title"):text()
     local author = document:selectFirst("div.author-details h4.author-name a"):text()
     local cover = document:selectFirst("div.story-sidebar-left-img img"):attr("src")
@@ -96,7 +105,7 @@ local function search(filters)
 
     if query and query ~= "" then
         local searchUrl = baseURL .. "/search?keyword=" .. query .. "&page=" .. page
-        local document = GETDocument(searchUrl)
+        local document = GETDocumentWithHeaders(searchUrl)
         return map(document:select("div.story-item"), function(v)
             local link = v:selectFirst("h3.story-title a")
             return Novel {
@@ -108,7 +117,7 @@ local function search(filters)
     else
         local sortValue = SortByOptions[tonumber(filters[2]) or 1].value
         local browseUrl = baseURL .. sortValue .. page
-        local document = GETDocument(browseUrl)
+        local document = GETDocumentWithHeaders(browseUrl)
         return map(document:select("div.story-item"), function(v)
             local link = v:selectFirst("h3.story-title a")
             return Novel {
@@ -140,7 +149,7 @@ return {
     name = "FictionZone",
     baseURL = baseURL,
     imageURL = "",
-    hasCloudFlare = true, -- THIS IS THE FIX
+    hasCloudFlare = true,
     hasSearch = true,
     chapterType = ChapterType.HTML,
 
