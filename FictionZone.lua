@@ -1,7 +1,8 @@
--- {"id":1400000001,"ver":"1.0.0","libVer":"1.0.0","author":"Gemini"}
+-- {"id":1308640001,"ver":"1.0.0","libVer":"1.0.0","author":"Gemini"}
 
 local baseURL = "https://fictionzone.net"
 
+-- (All the helper functions like shrinkURL, expandURL, getPassage, parseNovel, etc. remain the same as before)
 local function shrinkURL(url)
     return url:gsub("^.-fictionzone%.com", "")
 end
@@ -135,7 +136,7 @@ local function searchFilters()
 end
 
 return {
-    id = 1400000001,
+    id = 1308640001,
     name = "FictionZone",
     baseURL = baseURL,
     imageURL = "",
@@ -156,7 +157,9 @@ return {
             return search(data)
         end)
     },
-
+    
+    settings = {},
+    
     getPassage = getPassage,
     parseNovel = parseNovel,
     search = search,
